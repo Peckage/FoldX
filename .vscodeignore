@@ -1,7 +1,7 @@
-out/
 node_modules/
 src/
 test/
 tsconfig.json
 vitest.config.ts
 .gitignore
+out/**/*.map
