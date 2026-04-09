@@ -1,114 +1,40 @@
 # FoldX
 
-**Fold matching function calls in the current file.**
+Fold all instances of a function call in the current file.
 
-Place your cursor on any function name — like `it`, `describe`, or `test` — run a command, and FoldX folds every matching call in the file. Ideal for navigating large test files with many repeated blocks.
+Right-click any function like `it`, `describe`, or `test` and fold every matching call at once.
 
-FoldX is the sibling extension of [ReferenceX](https://marketplace.visualstudio.com/items?itemName=your-publisher-id.referencex).
+Part of the [Peckage](https://marketplace.visualstudio.com/publishers/Peckage) family, alongside [ReferenceX](https://marketplace.visualstudio.com/items?itemName=Peckage.referencex).
 
----
+## Usage
 
-## Features
+1. Right-click on a function name in a JS/TS file
+2. Select **FoldX: Fold All Instances**
+3. Every matching call in the file collapses
 
-- **Fold by cursor** — click on a function name, run the command, all matching calls collapse
-- **Fold by picker** — open a Quick Pick listing every foldable function in the file (with counts), choose one to fold
-- **Unfold all** — quickly restore all folded regions
-- AST-based detection using the TypeScript compiler API (no regex hacks)
-- Supports arrow functions and function expressions with block bodies
+To unfold, right-click and select **FoldX: Unfold All**.
 
-## Example
-
-```ts
-// Place cursor on "it", run FoldX: Fold Selected Function Calls
-// All it(...) blocks in the file collapse:
-
-describe('math', () => {
-  it('adds', () => { …
-  it('subtracts', () => { …
-  it('multiplies', () => { …
-});
-```
+Don't have your cursor on a function? Use **FoldX: Fold by Function Name** from the right-click menu or Command Palette to pick from a list of all foldable functions in the file.
 
 ## Commands
 
-| Command | ID | Description |
-|---|---|---|
-| **FoldX: Fold Selected Function Calls** | `foldx.foldSelectedFunctionCalls` | Fold all calls matching the function name at the cursor |
-| **FoldX: Unfold All** | `foldx.unfoldAll` | Unfold all folded regions in the active editor |
-| **FoldX: Fold by Function Name** | `foldx.foldByFunctionName` | Pick a function name from a list and fold all its calls |
+| Command | Description |
+|---|---|
+| **FoldX: Fold All Instances** | Fold all calls matching the function at cursor |
+| **FoldX: Fold by Function Name** | Pick a function from a list, fold all its calls |
+| **FoldX: Unfold All** | Unfold everything in the active editor |
 
-## Supported languages
+All three commands are available in the right-click context menu and the Command Palette.
 
-- TypeScript (`.ts`)
-- TypeScript React (`.tsx`)
-- JavaScript (`.js`)
-- JavaScript React (`.jsx`)
+## Supported Languages
 
-## Supported call patterns
+TypeScript, JavaScript, TSX, JSX.
 
-- Direct calls: `it(...)`, `describe(...)`, `test(...)`, and any other function call with a callback block
-- Member expression calls: `vitest.it(...)`, `foo.describe(...)`
+## Limitations
 
-The call must contain at least one argument that is an arrow function or function expression with a multi-line block body.
-
-## Limitations (v1)
-
-- Current file only — no workspace-wide folding
-- Relies on VS Code's built-in folding ranges provided by the TypeScript language service. If the language service doesn't recognize a range as foldable, FoldX cannot fold it.
-- `test.each(...)('name', ...)` and similar chained call patterns are not yet supported
-- Expression-body arrow callbacks (e.g. `arr.map(x => x + 1)`) are intentionally skipped since there is nothing to fold
-
-## How it works
-
-FoldX parses the active file with the TypeScript compiler API to find all `CallExpression` nodes. For each call with a named callee and a callback argument containing a block body, it records the foldable range. It then drives VS Code's built-in `editor.fold` command with the target line numbers.
-
-## Development
-
-### Prerequisites
-
-- Node.js 18+
-- pnpm
-
-### Setup
-
-```bash
-pnpm install
-```
-
-### Build
-
-```bash
-pnpm build
-```
-
-### Run in VS Code
-
-1. Open this folder in VS Code
-2. Press `F5` to launch the Extension Development Host
-3. Open a `.ts` or `.js` file with test blocks
-4. Run commands from the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
-
-### Run tests
-
-```bash
-pnpm test
-```
-
-### Package
-
-```bash
-pnpm package
-```
-
-This produces a `.vsix` file you can install locally or publish to the marketplace.
-
-## Publishing
-
-```bash
-npx vsce publish
-```
-
-Requires a Personal Access Token configured for the VS Code Marketplace. See the [publishing guide](https://code.visualstudio.com/api/working-with-extensions/publishing-extension).
+- Current file only
+- The call must have a callback with a block body (arrow function or function expression)
+- Relies on VS Code's built-in folding ranges
 
 ## License
 
