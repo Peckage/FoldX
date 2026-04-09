@@ -130,6 +130,38 @@ describe('findFoldableCalls', () => {
     expect(calls[0].name).toBe('it');
     expect(calls[0].callStartLine).toBe(0);
   });
+
+  it('extracts first string argument as label', () => {
+    const code = [
+      "it('renders correctly', () => {",
+      '  expect(true).toBe(true);',
+      '});',
+    ].join('\n');
+    const calls = findFoldableCalls(code);
+    expect(calls).toHaveLength(1);
+    expect(calls[0].label).toBe('renders correctly');
+  });
+
+  it('returns undefined label when no string argument', () => {
+    const code = [
+      'run(() => {',
+      '  doStuff();',
+      '});',
+    ].join('\n');
+    const calls = findFoldableCalls(code);
+    expect(calls).toHaveLength(1);
+    expect(calls[0].label).toBeUndefined();
+  });
+
+  it('folds empty callback blocks spanning multiple lines', () => {
+    const code = [
+      "it('todo', () => {",
+      '});',
+    ].join('\n');
+    const calls = findFoldableCalls(code);
+    expect(calls).toHaveLength(1);
+    expect(calls[0].name).toBe('it');
+  });
 });
 
 describe('resolveCallableNameAtPosition', () => {

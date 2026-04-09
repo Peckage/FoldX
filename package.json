@@ -2,7 +2,7 @@
   "name": "foldx",
   "displayName": "FoldX",
   "description": "Fold matching function calls in the current file.",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publisher": "Peckage",
   "icon": "icon.png",
   "license": "MIT",
@@ -30,34 +30,20 @@
   "contributes": {
     "commands": [
       {
-        "command": "foldx.foldSelectedFunctionCalls",
-        "title": "FoldX: Fold All Instances"
+        "command": "foldx.foldByFunctionName",
+        "title": "FoldX: Fold by Function Name"
       },
       {
         "command": "foldx.unfoldAll",
         "title": "FoldX: Unfold All"
-      },
-      {
-        "command": "foldx.foldByFunctionName",
-        "title": "FoldX: Fold by Function Name"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "foldx.foldSelectedFunctionCalls",
-          "when": "editorLangId =~ /typescript|typescriptreact|javascript|javascriptreact/",
-          "group": "1_modification@99"
-        },
-        {
           "command": "foldx.foldByFunctionName",
           "when": "editorLangId =~ /typescript|typescriptreact|javascript|javascriptreact/",
-          "group": "1_modification@100"
-        },
-        {
-          "command": "foldx.unfoldAll",
-          "when": "editorLangId =~ /typescript|typescriptreact|javascript|javascriptreact/",
-          "group": "1_modification@101"
+          "group": "1_modification@99"
         }
       ]
     }

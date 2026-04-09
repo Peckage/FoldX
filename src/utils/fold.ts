@@ -14,7 +14,6 @@ export async function foldCalls(
 
   const savedSelections = editor.selections;
 
-  // Place a cursor at the start of each call line
   editor.selections = calls.map(
     (c) =>
       new vscode.Selection(c.callStartLine, 0, c.callStartLine, 0),
@@ -22,7 +21,29 @@ export async function foldCalls(
 
   await vscode.commands.executeCommand('editor.fold');
 
-  // Restore original cursor position
+  editor.selections = savedSelections;
+
+  return calls.length;
+}
+
+/**
+ * Unfold the given calls by placing multi-cursors and running editor.unfold.
+ */
+export async function unfoldCalls(
+  editor: vscode.TextEditor,
+  calls: FoldableCall[],
+): Promise<number> {
+  if (calls.length === 0) return 0;
+
+  const savedSelections = editor.selections;
+
+  editor.selections = calls.map(
+    (c) =>
+      new vscode.Selection(c.callStartLine, 0, c.callStartLine, 0),
+  );
+
+  await vscode.commands.executeCommand('editor.unfold');
+
   editor.selections = savedSelections;
 
   return calls.length;

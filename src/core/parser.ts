@@ -3,6 +3,8 @@ import * as ts from 'typescript';
 export interface FoldableCall {
   /** The callable name, e.g. "it", "describe", "test" */
   name: string;
+  /** The first string argument if any (e.g. test name) */
+  label: string | undefined;
   /** 0-based line number where the call expression starts */
   callStartLine: number;
   /** 0-based line number of the block body opening `{` */
@@ -34,6 +36,18 @@ function findCallbackBlock(node: ts.CallExpression): ts.Block | undefined {
   return undefined;
 }
 
+function getFirstStringArg(node: ts.CallExpression): string | undefined {
+  for (const arg of node.arguments) {
+    if (ts.isStringLiteral(arg) || ts.isNoSubstitutionTemplateLiteral(arg)) {
+      return arg.text;
+    }
+    if (ts.isTemplateExpression(arg)) {
+      return arg.head.text + '...';
+    }
+  }
+  return undefined;
+}
+
 /**
  * Parse the given source text and return all foldable call expressions.
  * A call is foldable if it has a named callee and at least one argument
@@ -58,7 +72,7 @@ export function findFoldableCalls(
       const name = getCallableName(node);
       if (name) {
         const block = findCallbackBlock(node);
-        if (block && block.statements.length > 0) {
+        if (block) {
           const callStartLine = sourceFile.getLineAndCharacterOfPosition(
             node.getStart(sourceFile),
           ).line;
@@ -70,7 +84,8 @@ export function findFoldableCalls(
           ).line;
 
           if (blockStartLine < blockEndLine) {
-            results.push({ name, callStartLine, blockStartLine, blockEndLine });
+            const label = getFirstStringArg(node);
+            results.push({ name, label, callStartLine, blockStartLine, blockEndLine });
           }
         }
       }
