@@ -1,0 +1,61 @@
+{
+  "name": "foldx",
+  "displayName": "FoldX",
+  "description": "Fold matching function calls in the current file.",
+  "version": "0.1.0",
+  "publisher": "Peckage",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Peckage/FoldX"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "fold",
+    "collapse",
+    "function",
+    "calls",
+    "test",
+    "it",
+    "describe"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "foldx.foldSelectedFunctionCalls",
+        "title": "FoldX: Fold Selected Function Calls"
+      },
+      {
+        "command": "foldx.unfoldAll",
+        "title": "FoldX: Unfold All"
+      },
+      {
+        "command": "foldx.foldByFunctionName",
+        "title": "FoldX: Fold by Function Name"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "package": "vsce package --no-dependencies",
+    "vscode:prepublish": "pnpm run build"
+  },
+  "dependencies": {
+    "typescript": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "vitest": "^1.2.0"
+  }
+}
