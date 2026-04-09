@@ -148,15 +148,13 @@ describe('resolveCallableNameAtPosition', () => {
     expect(resolveCallableNameAtPosition(code, offset)).toBe('it');
   });
 
-  it('resolves name when cursor is inside callback body', () => {
+  it('resolves outermost foldable call when cursor is inside callback body', () => {
     const code = "it('works', () => {\n  expect(true).toBe(true);\n});\n";
     const offset = code.indexOf('expect');
     // cursor is inside expect(...) which is inside it(...)
-    // should resolve to the innermost call: 'expect'
-    // but walking up from expect's toBe call... actually expect(true).toBe(true) is a call chain
+    // should resolve to `it` because it's the outermost foldable call
     const name = resolveCallableNameAtPosition(code, offset);
-    // The deepest call at 'expect' position is the expect() call
-    expect(name).toBe('expect');
+    expect(name).toBe('it');
   });
 
   it('resolves member expression name', () => {

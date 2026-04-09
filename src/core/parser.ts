@@ -119,13 +119,26 @@ export function resolveCallableNameAtPosition(
   const token = findDeepestNode(sourceFile);
   if (!token) return undefined;
 
+  // Walk up from the deepest token. Collect all enclosing CallExpressions
+  // and return the outermost one that has a foldable callback, or the
+  // innermost CallExpression if none are foldable. This ensures that
+  // clicking inside `it('name', () => { expect(...) })` resolves to `it`
+  // rather than `expect`.
+  let innermost: string | undefined;
+  let outermostFoldable: string | undefined;
   let current: ts.Node | undefined = token;
   while (current) {
     if (ts.isCallExpression(current)) {
-      return getCallableName(current);
+      const name = getCallableName(current);
+      if (name) {
+        if (!innermost) innermost = name;
+        if (findCallbackBlock(current)) {
+          outermostFoldable = name;
+        }
+      }
     }
     current = current.parent;
   }
 
-  return undefined;
+  return outermostFoldable ?? innermost;
 }
