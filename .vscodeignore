@@ -1,7 +1,12 @@
 node_modules/
 src/
 test/
+out/
+.vscode/
+.git/
+icon.svg
 tsconfig.json
 vitest.config.ts
+pnpm-lock.yaml
+pnpm-workspace.yaml
 .gitignore
-out/**/*.map
